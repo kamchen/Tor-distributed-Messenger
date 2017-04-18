@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="runtime-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170413003124"/>
+		date="20170418000041"/>
 	<dependencies>
 		<module organisation="org.scala-lang" name="scala-swing">
 			<revision name="2.11.0-M7" status="release" pubdate="20131118150300" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.0-M7/" downloaded="false" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="3">

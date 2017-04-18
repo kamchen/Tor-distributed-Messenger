@@ -7,8 +7,10 @@ import scala.swing._
 
 sealed trait GroupServiceAPI
 case class JoinGroup(groupId : Int) extends GroupServiceAPI
-case class Invite(date: String, requester: Int, dateIndex: Int) extends GroupServiceAPI
-case class Accepted(accepter: Int) extends GroupServiceAPI
+case class Invite(date: String, requester: Int, dateIndex: Int, participantsList: List[Int]) extends GroupServiceAPI
+case class Accepted(participantsList: List[Int]) extends GroupServiceAPI
+case class Taken() extends GroupServiceAPI
+case class Rejected(participantsList: List[Int]) extends GroupServiceAPI
 
 class GroupServer(val myNodeID: Int, 
   val numNodes: Int, 
@@ -25,9 +27,6 @@ class GroupServer(val myNodeID: Int,
 
   	val ui = new UI(myNodeID, numNodes, 2)
    	ui.visible = true
-
-    var pending = ArrayBuffer[Int]()
-    var accepted = ArrayBuffer[Int]()
     
 
   	def receive() = {
@@ -40,41 +39,107 @@ class GroupServer(val myNodeID: Int,
         ui.setServers(endpoints)
       case JoinGroup(groupid) =>
         join(groupid)
-      case Invite(date, requester, dateIndex) =>
-        invite(date, requester,dateIndex)
-      case Accepted(accepter) =>
-        ui.displayMessage("*client " + accepter + " accepted.")
+      case Invite(date, requester, dateIndex, participantsList) =>
+        invite(date, requester,dateIndex, participantsList)
+      case Accepted(participantsList: List[Int]) =>
+      	accept(participantsList)
+      case Taken() =>
+      	ui.displayMessage("******Time slot was taken******")
+      case Rejected(participantsList) => 
+      	reject(participantsList)
       case msg =>
         processMessage(msg.asInstanceOf[String])
-      	
-      
   	}
 
 
+  	private def reject (participantsList: List[Int]) {
+  		ui.displayMessage("******Meeting was rejected******")
 
-  private def invite (date: String, requester: Int, dateIndex: Int) = {
+  		var index = participantsList.indexOf(myNodeID)
+
+  		if (index > 0) {
+
+  			endpoints.get(participantsList(index - 1)) ! Rejected(participantsList)
+  		}
+  	}
+
+  	private def accept(participantsList: List[Int]) {
+  		ui.displayMessage("******Meeting was confirmed******")
+
+  		var index = participantsList.indexOf(myNodeID)
+
+  		if (index > 0) {
+
+  			endpoints.get(participantsList(index - 1)) ! Accepted(participantsList)
+  		}
+  	}
+
+
+  private def invite (date: String, requester: Int, dateIndex: Int, participantsList: List[Int]) : Any = {
 
     ui.displayMessage("*******Meeting request from client "  + requester + " for " + date + "*******")
-    
-    val res =ui.acceptInvite(date, requester)
-    if (res == 1) {
-    
-      endpoints.get(requester) ! accepted(myNodeID)
 
-      var cell_current = readMeeting(dateIndex)
-      var elapse = 0
-      while (!cell_current.isDefined) {
+    //check to see if the time slot was taken
+    var cell_current = readMeeting(dateIndex)
+    var elapse = 0
+    while (!cell_current.isDefined) {
 
         if (elapse == 100) {
 
           cell_current = readMeeting(dateIndex)
           elapse = 0
         }
-
         elapse += 1
-      }
     }
 
+    
+    var cell_currentL = cell_current.get
+
+    var i = -1
+    var isTaken = 0
+    for (i <- cell_currentL) {
+    	isTaken = 1
+    }
+
+    //if time slot was taken 
+
+    if (isTaken == 1) {
+    	ui.displayMessage("******Time slot was taken******")
+    	endpoints.get(requester) ! Taken()
+    	groupstoreMeeting.begin()
+    	return
+    }
+    
+    //if time slot was not taken
+    
+    val res =ui.acceptInvite(date, requester)
+    if (res == 1) {
+
+      	var plen = participantsList.length
+
+      	//if current client is the last one
+
+      	if (participantsList(plen - 1) == myNodeID) {
+
+      		writeMeeting(dateIndex, participantsList)
+      		groupstoreMeeting.begin()
+      		ui.displayMessage("******Meeting was confirmed******")
+      		endpoints.get(requester) ! Accepted(participantsList)
+      	}
+
+      	else {
+      	
+      		groupstoreMeeting.begin()
+      		var currIndex = participantsList.indexOf(myNodeID)
+      		endpoints.get(participantsList(currIndex + 1)) ! Invite(date, myNodeID, dateIndex, participantsList)
+      	}
+    }
+
+    else {
+    	groupstoreMeeting.begin()
+    	ui.displayMessage("******Meeting was rejected******")
+    	endpoints.get(requester) ! Rejected(participantsList)
+    }
 
 
   }
@@ -249,13 +314,13 @@ class GroupServer(val myNodeID: Int,
   }
 
   def readMeeting(key: BigInt): Option[List[Int]] = {
-    val result = groupstore.directRead(key)
+    val result = groupstoreMeeting.directRead(key)
     if (result.isEmpty) None else
       Some(result.get.asInstanceOf[List[Int]])
   }
 
   def writeMeeting(key: BigInt, value: List[Int]): Option[List[Int]] = {
-    val result = groupstore.directWrite(key, value)
+    val result = groupstoreMeeting.directWrite(key, value)
     if (result.isEmpty) None else
       Some(result.get.asInstanceOf[List[Int]])
   }

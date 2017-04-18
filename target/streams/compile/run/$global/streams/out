@@ -1,7 +1,7 @@
 [0m[[0minfo[0m] [0mRunning KVmessenger.TestHarness [0m
 [0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
 [0m[[0mdebug[0m] [0m  Classpath:[0m
-[0m[[0mdebug[0m] [0m	/Users/wellxchen/Desktop/作业/security project/KVmessenger-master-339497b3141e6053b71af6354fc4ca755a706942/target/scala-2.11/classes[0m
+[0m[[0mdebug[0m] [0m	/Users/wellxchen/Desktop/key-value-store-distributed-Messenger-master/target/scala-2.11/classes[0m
 [0m[[0mdebug[0m] [0m	/Users/wellxchen/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.7.jar[0m
 [0m[[0mdebug[0m] [0m	/Users/wellxchen/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/jars/akka-actor_2.11-2.3.12.jar[0m
 [0m[[0mdebug[0m] [0m	/Users/wellxchen/.ivy2/cache/com.typesafe/config/bundles/config-1.2.1.jar[0m
@@ -32,8 +32,26 @@ java.util.concurrent.TimeoutException: Futures timed out after [60 seconds]
 	at sbt.TrapExit$App.run(TrapExit.scala:248)
 	at java.lang.Thread.run(Thread.java:745)
 [0m[[0mdebug[0m] [0m	Thread run-main-0 exited.[0m
-[0m[[0mdebug[0m] [0mWaiting for thread KVmessenger-akka.actor.default-dispatcher-6 to terminate.[0m
-[0m[[0mdebug[0m] [0m	Thread KVmessenger-akka.actor.default-dispatcher-6 exited.[0m
-[0m[[0mdebug[0m] [0mWaiting for thread KVmessenger-akka.actor.default-dispatcher-4 to terminate.[0m
-[0m[[0mdebug[0m] [0m	Thread KVmessenger-akka.actor.default-dispatcher-4 exited.[0m
 [0m[[0mdebug[0m] [0mWaiting for thread AWT-Shutdown to terminate.[0m
+[0m[[0mdebug[0m] [0mDisposing 3 top-level windows...[0m
+[0m[[0mdebug[0m] [0mWaiting 2 s to let AWT thread exit.[0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[Java2D Queue Flusher,10,system][0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[AWT-Shutdown,5,system][0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[TimerQueue,5,system][0m
+[0m[[0mdebug[0m] [0mInterrupting thread KVmessenger-akka.actor.default-dispatcher-2[0m
+[0m[[0mdebug[0m] [0m	Interrupted KVmessenger-akka.actor.default-dispatcher-2[0m
+[0m[[0mdebug[0m] [0mInterrupting thread KVmessenger-akka.actor.default-dispatcher-5[0m
+[0m[[0mdebug[0m] [0m	Interrupted KVmessenger-akka.actor.default-dispatcher-5[0m
+[0m[[0mdebug[0m] [0mInterrupting thread AWT-EventQueue-0[0m
+[0m[[0mdebug[0m] [0m	Interrupted AWT-EventQueue-0[0m
+[0m[[0mdebug[0m] [0mInterrupting thread KVmessenger-akka.actor.default-dispatcher-6[0m
+[0m[[0mdebug[0m] [0m	Interrupted KVmessenger-akka.actor.default-dispatcher-6[0m
+[0m[[0mdebug[0m] [0mInterrupting thread KVmessenger-scheduler-1[0m
+[0m[[0mdebug[0m] [0m	Interrupted KVmessenger-scheduler-1[0m
+[0m[[0mdebug[0m] [0mInterrupting thread KVmessenger-akka.actor.default-dispatcher-3[0m
+[0m[[0mdebug[0m] [0m	Interrupted KVmessenger-akka.actor.default-dispatcher-3[0m
+[0m[[0mdebug[0m] [0mInterrupting thread KVmessenger-akka.actor.default-dispatcher-4[0m
+[0m[[0mdebug[0m] [0m	Interrupted KVmessenger-akka.actor.default-dispatcher-4[0m
+[0m[[0mdebug[0m] [0mNot interrupting system thread Thread[Java2D Disposer,10,system][0m
+[0m[[0mdebug[0m] [0m	Thread AWT-Shutdown exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread KVmessenger-akka.actor.default-dispatcher-2 to terminate.[0m

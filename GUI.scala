@@ -57,6 +57,8 @@ class UI (clientId : Int, numNodes: Int, numGroups: Int) extends MainFrame {
 
   var added = List[Int]()
 
+  added ::= clientId
+
   def initializePanel () {
 
     title = "Client " + clientId 
@@ -70,8 +72,9 @@ class UI (clientId : Int, numNodes: Int, numGroups: Int) extends MainFrame {
         contents += clients
         contents += Button("add") { 
 
-          if (added.contains(clients.item)) {
+          if (added.contains(clients.item.toInt)) {
             displayMessage("*******Client " + clients.item + " is already in invite list*******")
+
           }
           else {
             added ::= clients.item.toInt
@@ -106,10 +109,13 @@ class UI (clientId : Int, numNodes: Int, numGroups: Int) extends MainFrame {
         contents += Swing.HStrut(5)
         contents += Button("request") {
 
-          invite(added, dates.item, dates.selection.index)
-          var x = 0
-          for (x <- added) {
-            displayMessage("*******Meeting request sent to client" + x + " *******")
+          if (added.length > 1) {
+          	invite(added, dates.item, dates.selection.index)
+
+          	displayMessage("*******Meeting request sent to client" + added(1) + " *******")
+
+          	added = List[Int]()
+          	added ::= clientId
           }
 
         }
@@ -190,7 +196,7 @@ class UI (clientId : Int, numNodes: Int, numGroups: Int) extends MainFrame {
   }
 
   def invite (targetIds: List[Int], date: String, dateIndex: Int) {
-    targetIds.foreach(servers.get(_) ! Invite(date, clientId, dateIndex))
+    servers.get(targetIds(1)) ! Invite(date, clientId, dateIndex, targetIds)
   }
 
   def acceptInvite (date: String, requester: Int) : Int = {
